@@ -24,9 +24,8 @@ def set_ready_to_authenticate():
 def get_status():
     global ready_to_authenticate
     with lock:
-        value = ready_to_authenticate
-        ready_to_authenticate = False
-    return jsonify({"is_ready_to_authenticate": ready_to_authenticate}), 200
+        is_ready_to_authenticate  = ready_to_authenticate
+    return jsonify({"is_ready_to_authenticate": is_ready_to_authenticate }), 200
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
