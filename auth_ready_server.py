@@ -5,20 +5,28 @@ app = Flask(__name__)
 ready_to_authenticate = False
 lock = Lock()
 
-@app.route('/set', methods=['GET'])
-def set_ready():
+@app.route('/set-status-ok', methods=['GET'])
+def set_status_ok():
+    global ready_to_authenticate
+    with lock:
+        ready_to_authenticate = False
+    return jsonify({"status": "success"}), 200
+	
+	
+@app.route('/set-ready-to-authenticate', methods=['GET'])
+def set_ready_to_authenticate():
     global ready_to_authenticate
     with lock:
         ready_to_authenticate = True
-    return jsonify({"status": "ready", "value": True})
+    return jsonify({"status": "success"}), 200
 
-@app.route('/get', methods=['GET'])
-def get_ready():
+@app.route('/status', methods=['GET'])
+def get_status():
     global ready_to_authenticate
     with lock:
         value = ready_to_authenticate
-        ready_to_authenticate = False  # reset after reading, optional
-    return jsonify({"value": value})
+        ready_to_authenticate = False
+    return jsonify({"is_ready_to_authenticate": ready_to_authenticate}), 200
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
